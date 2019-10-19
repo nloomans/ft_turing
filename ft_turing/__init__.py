@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """42 Turing VM
 
 Usage:
@@ -18,7 +17,7 @@ from docopt import docopt
 import json
 from machine import Machine
 
-if __name__ == '__main__':
+def main():
     arguments = docopt(__doc__)
     machine_file_name = arguments['<machine>']
     machine_input = arguments['<input>']
@@ -37,3 +36,6 @@ if __name__ == '__main__':
         print(f"Unable to parse machine: {e}")
         exit(1)
     print(machine)
+
+if __name__ == '__main__':
+    main()
