@@ -75,8 +75,7 @@ alphabet: {self.alphabet}
     blank: {self.blank}
 states: {self.states}
     finals: {self.final_states}
-transitions:
-"""
+transitions:"""
         for (from_state, read), transition in self.transitions.items():
-            string += f"    ({from_state}, {read}) -> {transition}\n"
+            string += f"\n    ({from_state}, {read}) -> {transition}"
         return string
