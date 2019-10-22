@@ -22,10 +22,6 @@ class Transition:
     def __str__(self):
         return "(%s, %s, %s)" % (self.to_state, self.write, self.action)
 
-    def __resp__(self):
-        return "<%s to %s, moving %s, writing %s>" % (
-            self.__class__.__name__, self.to_state, self.action, self.write)
-
 
 class Machine:
     def __init__(self, json):
