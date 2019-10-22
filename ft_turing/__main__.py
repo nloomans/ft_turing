@@ -17,12 +17,13 @@ from docopt import docopt
 import json
 from ft_turing.machine import Machine
 from ft_turing.vm import VM
+from ft_turing.validate import validate
 
 
 def main():
     arguments = docopt(__doc__)
     machine_file_name = arguments['<machine>']
-    machine_input = arguments['<input>']
+    vm_input = arguments['<input>']
 
     machine_json = None
     try:
@@ -31,20 +32,23 @@ def main():
     except Exception as e:
         print(f"Unable to read machine: {e}")
         exit(1)
-    machine = None
     try:
-        machine = Machine(machine_json)
-    except ValueError as e:
-        print(f"Unable to parse machine: {e}")
+        validate(machine_json, vm_input)
+    except AssertionError as e:
+        print(f"Validation failed: {e}")
         exit(1)
+    machine = Machine(machine_json)
     print(machine)
-    vm = VM(machine, machine_input, machine_json['initial'])
+    vm = VM(machine, vm_input, machine_json['initial'])
     print("\n==> starting executing...\n")
     while True:
         did_halt = vm.step()
         if did_halt:
             break
-    print(f"\n==> machine halted at state {vm.current_state} with tape {vm.tape}\n")
+    print(
+        f"\n==> machine halted at state {vm.current_state} with tape {vm.tape}\n"
+    )
+
 
 if __name__ == '__main__':
     main()
