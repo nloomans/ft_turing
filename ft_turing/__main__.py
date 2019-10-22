@@ -39,10 +39,12 @@ def main():
         exit(1)
     print(machine)
     vm = VM(machine, machine_input, machine_json['initial'])
+    print("\n==> starting executing...\n")
     while True:
         did_halt = vm.step()
         if did_halt:
             break
+    print(f"\n==> machine halted at state {vm.current_state} with tape {vm.tape}\n")
 
 if __name__ == '__main__':
     main()

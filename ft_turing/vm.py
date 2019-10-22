@@ -1,3 +1,4 @@
+from colorama import Fore, Style
 from ft_turing.machine import Action
 
 
@@ -32,13 +33,31 @@ class Tape:
         if char == self.blank:
             if self.index in self.tape:
                 del self.tape[self.index]
-        self.tape[self.index] = char
+        else:
+            self.tape[self.index] = char
 
     def move(self, action):
         if action == Action.LEFT:
             self.index -= 1
         if action == Action.RIGHT:
             self.index += 1
+
+    def __str__(self):
+        str = ""
+        indexes = sorted(self.tape)
+        startIndex = min(indexes[0], self.index)
+        endIndex = max(indexes[-1], self.index)
+        str += f"[{startIndex}]"
+        for index in range(startIndex, endIndex + 1):
+            if self.index == index:
+                str += Style.BRIGHT + Fore.RED
+            if index not in self.tape:
+                str += Style.DIM + self.blank
+            else:
+                str += self.tape[index]
+            str += Style.RESET_ALL
+        str += f"[{endIndex}]"
+        return str
 
 
 class VM:
@@ -53,7 +72,10 @@ class VM:
 
     def step(self):
         transition = self.machine.run(self.current_state, self.tape.read())
-        print(transition)
+
+        state_max_len = len(sorted(self.machine.states, key=lambda state: len(state))[-1])
+        print(f" {self.current_state.rjust(state_max_len)} {self.tape} {transition}")
+
         self.current_state = transition.to_state
         self.tape.write(transition.write)
         self.tape.move(transition.action)
