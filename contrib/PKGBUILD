@@ -6,7 +6,7 @@ pkgdesc="42 Turing VM"
 arch=('any')
 url="https://github.com/nloomans/ft_turing"
 license=('MIT')
-depends=('python-docopt' 'python-setuptools')
+depends=('python-docopt' 'python-colorama' 'python-setuptools')
 source=('https://github.com/nloomans/ft_turing/archive/master.tar.gz')
 md5sums=('SKIP')
 
