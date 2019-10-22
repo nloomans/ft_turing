@@ -1,0 +1,21 @@
+# Maintainer: Noah Loomans <noah@noahloomans.com>
+pkgname=ft_turing-git
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="42 Turing VM"
+arch=('any')
+url="https://github.com/nloomans/ft_turing"
+license=('MIT')
+depends=('python-docopt' 'python-setuptools')
+source=('https://github.com/nloomans/ft_turing/archive/master.tar.gz')
+md5sums=('SKIP')
+
+build() {
+        cd ft_turing-master
+        python setup.py build
+}
+
+package() {
+        cd ft_turing-master
+        python setup.py install --root="$pkgdir/"
+}
