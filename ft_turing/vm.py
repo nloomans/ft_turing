@@ -1,3 +1,4 @@
+import sys
 from colorama import Fore, Style
 from ft_turing.machine import Action, MachineException
 
@@ -40,23 +41,33 @@ class Tape:
         indexes = sorted(self.tape)
         startIndex = min(indexes[0], self.index)
         endIndex = max(indexes[-1], self.index)
-        str += f"[{startIndex}]"
-        for index in range(startIndex, endIndex + 1):
-            if self.index == index:
-                str += Style.BRIGHT + Fore.RED
-            if index not in self.tape:
-                str += Style.DIM + self.blank
-            else:
-                str += self.tape[index]
-            str += Style.RESET_ALL
-        str += f"[{endIndex}]"
+        if sys.stdout.isatty():
+            str += f"[{startIndex}]"
+            for index in range(startIndex, endIndex + 1):
+                if self.index == index:
+                    str += Style.BRIGHT + Fore.RED
+                if index not in self.tape:
+                    str += Style.DIM + self.blank
+                else:
+                    str += self.tape[index]
+                str += Style.RESET_ALL
+            str += f"[{endIndex}]"
+        else:
+            str += f"<{self.index}> "
+            str += f"[{startIndex}]"
+            for index in range(startIndex, endIndex + 1):
+                if index not in self.tape:
+                    str += self.blank
+                else:
+                    str += self.tape[index]
+            str += f"[{endIndex}]"
         return str
 
 
 class VM:
-    def __init__(self, machine, machine_input, initial_state):
+    def __init__(self, machine, vm_input, initial_state):
         self.machine = machine
-        self.tape = Tape(machine.blank, machine_input)
+        self.tape = Tape(machine.blank, vm_input)
         self.current_state = initial_state
 
     def step(self):
@@ -69,7 +80,10 @@ class VM:
             transition = self.machine.run(self.current_state, self.tape.read())
             print(transition)
         except MachineException as e:
-            print(f"{Style.DIM}{e}{Style.RESET_ALL}")
+            if sys.stdout.isatty():
+                print(f"{Style.DIM}{e}{Style.RESET_ALL}")
+            else:
+                print(str(e))
             raise e
 
         self.current_state = transition.to_state
