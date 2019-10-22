@@ -15,7 +15,7 @@ Options:
 
 from docopt import docopt
 import json
-from ft_turing.machine import Machine
+from ft_turing.machine import Machine, MachineException
 from ft_turing.vm import VM
 from ft_turing.validate import validate
 
@@ -32,21 +32,27 @@ def main():
     except Exception as e:
         print(f"Unable to read machine: {e}")
         exit(1)
+
     try:
         validate(machine_json, vm_input)
     except AssertionError as e:
         print(f"Validation failed: {e}")
         exit(1)
+
     machine = Machine(machine_json)
     print(machine)
     vm = VM(machine, vm_input, machine_json['initial'])
     print("\n==> starting executing...\n")
     while True:
-        did_halt = vm.step()
+        try:
+            did_halt = vm.step()
+        except MachineException as e:
+            print(f"\n==> machine execution failed: {e}\n")
+            exit(1)
         if did_halt:
             break
     print(
-        f"\n==> machine halted at state {vm.current_state} with tape {vm.tape}\n"
+        f"\n==> machine halted in state {vm.current_state} with tape {vm.tape}\n"
     )
 
 

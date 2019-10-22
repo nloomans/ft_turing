@@ -1,5 +1,5 @@
 from colorama import Fore, Style
-from ft_turing.machine import Action
+from ft_turing.machine import Action, MachineException
 
 
 class VMException(Exception):
@@ -60,13 +60,17 @@ class VM:
         self.current_state = initial_state
 
     def step(self):
-        transition = self.machine.run(self.current_state, self.tape.read())
-
         state_max_len = len(
             sorted(self.machine.states, key=lambda state: len(state))[-1])
-        print(
-            f" {self.current_state.rjust(state_max_len)} {self.tape} {transition}"
-        )
+        print(f" {self.current_state.rjust(state_max_len)} {self.tape} ",
+              end='')
+
+        try:
+            transition = self.machine.run(self.current_state, self.tape.read())
+            print(transition)
+        except MachineException as e:
+            print(f"{Style.DIM}{e}{Style.RESET_ALL}")
+            raise e
 
         self.current_state = transition.to_state
         self.tape.write(transition.write)

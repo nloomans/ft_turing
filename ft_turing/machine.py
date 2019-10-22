@@ -40,14 +40,16 @@ class Machine:
         self.transitions = {}
         for from_state, transitions in json['transitions'].items():
             for transition in transitions:
-                self.transitions[(from_state, transition['read'])] = Transition(transition)
+                self.transitions[(from_state,
+                                  transition['read'])] = Transition(transition)
 
     def run(self, from_state, read):
         if (from_state, read) in self.transitions:
             return self.transitions[(from_state, read)]
         else:
             raise MachineException(
-                f"no transition for {read} from state {from_state}")
+                f"reading '{read}' while in state '{from_state}' did not result in a transition"
+            )
 
     def __str__(self):
         string = f"""name: {self.name}
