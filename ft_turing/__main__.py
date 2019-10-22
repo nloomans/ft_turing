@@ -42,7 +42,7 @@ def main():
     machine = Machine(machine_json)
     print(machine)
     vm = VM(machine, vm_input, machine_json['initial'])
-    print("\n==> starting executing...\n")
+    print("\n==> starting execution...\n")
     while True:
         try:
             did_halt = vm.step()
