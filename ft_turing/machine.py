@@ -1,6 +1,10 @@
 from enum import Enum
 
 
+class MachineException(Exception):
+    pass
+
+
 class Action(Enum):
     LEFT = "LEFT"
     RIGHT = "RIGHT"
@@ -67,7 +71,15 @@ class Machine:
                 if (from_state, read) in self.transitions:
                     raise ValueError(
                         f'dublicate transition {(from_state, read)}')
+
                 self.transitions[(from_state, read)] = Transition(transition)
+
+    def run(self, from_state, read):
+        if (from_state, read) in self.transitions:
+            return self.transitions[(from_state, read)]
+        else:
+            raise MachineException(
+                f"no transition for {read} from state {from_state}")
 
     def __str__(self):
         string = f"""name: {self.name}

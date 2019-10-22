@@ -16,6 +16,8 @@ Options:
 from docopt import docopt
 import json
 from ft_turing.machine import Machine
+from ft_turing.vm import VM
+
 
 def main():
     arguments = docopt(__doc__)
@@ -36,6 +38,11 @@ def main():
         print(f"Unable to parse machine: {e}")
         exit(1)
     print(machine)
+    vm = VM(machine, machine_input, machine_json['initial'])
+    while True:
+        did_halt = vm.step()
+        if did_halt:
+            break
 
 if __name__ == '__main__':
     main()
