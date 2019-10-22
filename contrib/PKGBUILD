@@ -15,6 +15,11 @@ build() {
         python setup.py build
 }
 
+check() {
+        cd $srcdir/ft_turing-master
+        python -m ft_turing contrib/unary_sub.json "111-11="
+}
+
 package() {
         cd ft_turing-master
         python setup.py install --root="$pkgdir/"
